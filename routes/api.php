@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -17,5 +18,6 @@ Route::middleware(['auth:sanctum'])->get('/users', function (Request $request) {
 });
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::resource('products', ProductController::class);
+    Route::resource('categories', CategoryController::class);
     Route::post('/logout', [AuthController::class, 'logout']);
 });

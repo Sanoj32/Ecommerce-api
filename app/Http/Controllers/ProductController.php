@@ -12,11 +12,17 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $searchQuery = $request->searchQuery;
+        $products = Product::when($searchQuery, function ($query) use ($request, $searchQuery) {
+            $query->where('name', 'like', '%' . $searchQuery . '%')
+                ->orWhere('description', 'like', '%' . $searchQuery . '%')
+                ->orWhere('price', 'like', '%' . $searchQuery . '%');
+        })->paginate(10);
         return response([
             'message' => 'Products retrieved successfully.',
-            'products' => Product::all()
+            'products' => $products
         ]);
     }
 
@@ -59,7 +65,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
 
         $product->update($request->all());
